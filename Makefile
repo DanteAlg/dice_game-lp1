@@ -1,20 +1,27 @@
-CPPFLAGS = -O0 -Wall -pedantic
-OBJECTS = main.o jogador.o jogo.o
+# Compiler
+CC = g++
 
-prog: $(OBJECTS)
-	g++ $(CPPFLAGS) -o prog $(OBJECTS)
+INC = ./include
+SRC = ./src
+OBJ = ./build
+BIN = ./bin
 
-prog_debug: $(OBJECTS)
-	g++ $(CPPFLAGS) -g -o prog_debug $(OBJECTS)
+CPPFLAGS = -O0 -Wall -pedantic -std=c++11 -I$(INC)
+OBJECTS = $(OBJ)/main.o $(OBJ)/player.o $(OBJ)/game.o
 
-main.o:
-	g++ $(CPPFLAGS) -c main.cpp
+PROG = $(BIN)/game
 
-jogador.o:
-	g++ $(CPPFLAGS) -c jogador.cpp
+all: $(OBJECTS)
+	$(CC) $(CPPFLAGS) -o $(PROG) $(OBJECTS)
 
-jogo.o:
-	g++ $(CPPFLAGS) -c jogo.cpp
+$(OBJ)/player.o: $(INC)/player.h
+	$(CC) $(CPPFLAGS) -c $(SRC)/player.cpp -o $@
+
+$(OBJ)/game.o: $(INC)/game.h $(OBJ)/player.o
+	$(CC) $(CPPFLAGS) -c $(SRC)/game.cpp -o $@
+
+$(OBJ)/main.o: $(OBJ)/game.o $(OBJ)/player.o
+	$(CC) $(CPPFLAGS) -c $(SRC)/main.cpp -o $@
 
 clean:
-	rm -f core prog $(OBJECTS)
+	rm -f $(PROG) $(OBJECTS)
