@@ -3,10 +3,9 @@
 
 #include <iostream>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
 
 #include "player.h"
+#include "dice.h"
 
 class Game {
   private:
@@ -14,10 +13,13 @@ class Game {
     int round;
     int winner;
     std::vector <Player> players;
+    Dice dice1;
+    Dice dice2;
 
-    int playerRound(Player &p);
+    void printRound(int round);
+    int playerRound(int id);
     int diceRoll();
-    bool playRound(Player &p);
+    bool playRound(int id);
     void printWinner(int plays);
     void verifyWinner();
 

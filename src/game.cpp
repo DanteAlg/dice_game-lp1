@@ -1,5 +1,7 @@
 #include "game.h"
 
+#define DICE_SIZE 6
+
 Game::Game(int topValue_) : round(0), winner(-1) {
   topValue = topValue_;
 }
@@ -20,12 +22,14 @@ void Game::start() {
   int plays = 0;
   bool on_game = true;
 
+  std::cout << "Iniciando o jogo..." << std::endl;
+
   while(on_game) {
     round++;
 
     for(int i = 0; i < players.size(); i++) {
       if (winner < 0 && players[i].getStatus() != LOSE)
-        plays += playerRound(players[i]);
+        plays += playerRound(i);
 
       if (players[i].getStatus() == WINNER)
         winner = i;
@@ -35,6 +39,7 @@ void Game::start() {
       on_game = false;
 
     plays = 0;
+    printRound(round);
   }
 
   verifyWinner();
@@ -43,32 +48,49 @@ void Game::start() {
 
 // Private methods
 
-int Game::playerRound(Player &p) {
+void Game::printRound(int round) {
+  std::cout << "ROUND: " << round << " <------------------------->" << std::endl;
+
+  for(int i = 0; i < players.size(); i++) {
+    std::cout << "Player " << players[i] << " -> " << players[i].getValue() << std::endl;
+  }
+
+  std::cout << std::endl << std::endl;
+}
+
+int Game::playerRound(int id) {
   int value;
 
-  if (playRound(p)) {
+  if (playRound(id)) {
     value = diceRoll() + diceRoll();
-    p.accumulate(value);
+    players[id].accumulate(value);
   }
   else
     return 0;
 
-  if (p.getValue() > topValue)
-    p.setStatus(LOSE);
-  else if (p.getValue() == topValue)
-    p.setStatus(WINNER);
+  if (players[id].getValue() > topValue)
+    players[id].setStatus(LOSE);
+  else if (players[id].getValue() == topValue)
+    players[id].setStatus(WINNER);
 
   return 1;
 }
 
+// Use radom generator of C++ and pass this to dice class
 int Game::diceRoll() {
-  std::srand(time(NULL));
-  return (std::rand()%6+1);
+  return dice1.roll() + dice2.roll();
 }
 
-// TODO: Implement rule to play round
-bool Game::playRound(Player &p) {
-  return true;
+bool Game::playRound(int id) {
+  int player_value = players[id].getValue();
+
+  if (player_value < topValue - DICE_SIZE*2) return true;
+  else
+    for(int i = 0; i < players.size(); i++)
+      if (id != i && players[i].getValue() < topValue && players[i].getValue() > player_value)
+        return true;
+
+  return false;
 }
 
 void Game::printWinner(int plays) {

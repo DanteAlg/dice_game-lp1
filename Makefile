@@ -7,7 +7,7 @@ OBJ = ./build
 BIN = ./bin
 
 CPPFLAGS = -O0 -Wall -pedantic -std=c++11 -I$(INC)
-OBJECTS = $(OBJ)/main.o $(OBJ)/player.o $(OBJ)/game.o
+OBJECTS = $(OBJ)/main.o $(OBJ)/player.o $(OBJ)/dice.o $(OBJ)/game.o
 
 PROG = $(BIN)/game
 
@@ -17,7 +17,10 @@ all: $(OBJECTS)
 $(OBJ)/player.o: $(INC)/player.h
 	$(CC) $(CPPFLAGS) -c $(SRC)/player.cpp -o $@
 
-$(OBJ)/game.o: $(INC)/game.h $(OBJ)/player.o
+$(OBJ)/dice.o: $(INC)/dice.h
+	$(CC) $(CPPFLAGS) -c $(SRC)/dice.cpp -o $@
+
+$(OBJ)/game.o: $(INC)/game.h $(OBJ)/player.o $(OBJ)/dice.o
 	$(CC) $(CPPFLAGS) -c $(SRC)/game.cpp -o $@
 
 $(OBJ)/main.o: $(OBJ)/game.o $(OBJ)/player.o
