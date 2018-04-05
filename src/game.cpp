@@ -35,7 +35,7 @@ void Game::start() {
         winner = i;
     }
 
-    if (plays == 0)
+    if (plays == 0 || winner >= 0)
       on_game = false;
 
     plays = 0;
@@ -87,7 +87,7 @@ bool Game::playRound(int id) {
   if (player_value < topValue - DICE_SIZE*2) return true;
   else
     for(int i = 0; i < players.size(); i++)
-      if (id != i && players[i].getValue() < topValue && players[i].getValue() > player_value)
+      if (id != i && players[i].getValue() < topValue && players[i].getValue() >= player_value)
         return true;
 
   return false;
