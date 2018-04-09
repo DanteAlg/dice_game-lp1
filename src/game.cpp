@@ -8,11 +8,13 @@ Game::Game(int topValue_) : round(0), winner(-1) {
 
 Game::~Game() {}
 
+// This method add a new user object on players vector
 void Game::addPlayer(Player *p) {
   players.push_back(*p);
   std::cout << "-> Adicionado jogador " << *p << std::endl;
 }
 
+// This method start the game
 void Game::start() {
   if (players.size() == 0) {
     std::cout << "Precisamos de ao menos um jogador para iniciar..." << std::endl;
@@ -48,6 +50,7 @@ void Game::start() {
 
 // Private methods
 
+// Print users informations in current round
 void Game::printRound(int round) {
   std::cout << "ROUND: " << round << " <------------------------->" << std::endl;
 
@@ -58,6 +61,7 @@ void Game::printRound(int round) {
   std::cout << std::endl << std::endl;
 }
 
+// Execute user round
 int Game::playerRound(int id) {
   int value;
 
@@ -76,11 +80,14 @@ int Game::playerRound(int id) {
   return 1;
 }
 
-// Use radom generator of C++ and pass this to dice class
+// Roll two dices
 int Game::diceRoll() {
   return dice1.roll() + dice2.roll();
 }
 
+// Verify if user will play round.
+// If user sum is smaller than sum of two dices so he plays
+// Else verify if any user have a cumulative value bigger
 bool Game::playRound(int id) {
   int player_value = players[id].getValue();
 
@@ -93,6 +100,7 @@ bool Game::playRound(int id) {
   return false;
 }
 
+// Print informations of winner
 void Game::printWinner(int plays) {
   if (plays == 0 && winner < 0) {
     std::cout << "Empate, todos passaram do valor máximo :(" << std::endl;
@@ -102,6 +110,9 @@ void Game::printWinner(int plays) {
   }
 }
 
+// This method verify if any user have a 'win' status
+// If all users have a 'LOSE' status so game is drawn
+// Else verify which user have a cumulative value more closest of top game value
 void Game::verifyWinner() {
   int win_cumulative = 0;
 
